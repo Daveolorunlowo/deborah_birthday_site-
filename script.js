@@ -1091,4 +1091,52 @@ if (letterCard) {
     }
 }
 
+// --- Background Music Player ---
+const bgMusic = document.getElementById('bg-music');
+const musicToggle = document.getElementById('music-toggle');
+let isMusicPlaying = false;
 
+if (bgMusic && musicToggle) {
+    musicToggle.addEventListener('click', () => {
+        if (isMusicPlaying) {
+            bgMusic.pause();
+            musicToggle.innerHTML = '<i class="fa-solid fa-play"></i> <span class="music-text">Play Music</span>';
+        } else {
+            bgMusic.play().catch(e => console.log("Audio play failed:", e));
+            musicToggle.innerHTML = '<i class="fa-solid fa-pause"></i> <span class="music-text">Pause Music</span>';
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
+}
+
+// ===== Floating Music Notes =====
+const musicNoteWrap = document.getElementById('music-notes-wrap');
+const noteEmojis = ['🎵','🎶','🎼','♪','♫'];
+let musicNoteInterval = null;
+
+function spawnMusicNote() {
+    if (!musicNoteWrap) return;
+    const el = document.createElement('span');
+    el.className = 'music-note';
+    el.textContent = noteEmojis[Math.floor(Math.random() * noteEmojis.length)];
+    el.style.left = `${Math.random() * 95}%`;
+    const dur = Math.random() * 5 + 6;
+    el.style.animationDuration = `${dur}s`;
+    musicNoteWrap.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000 + 500);
+}
+
+if (musicToggle) {
+    musicToggle.addEventListener('click', () => {
+        setTimeout(() => {
+            if (bgMusic && !bgMusic.paused) {
+                if (!musicNoteInterval) {
+                    musicNoteInterval = setInterval(spawnMusicNote, 2500);
+                }
+            } else {
+                clearInterval(musicNoteInterval);
+                musicNoteInterval = null;
+            }
+        }, 100);
+    });
+}
