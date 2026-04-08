@@ -586,23 +586,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Background Music Player ---
-    const bgMusic = document.getElementById('bg-music');
-    const musicToggle = document.getElementById('music-toggle');
-    let isMusicPlaying = false;
-
-    if (bgMusic && musicToggle) {
-        musicToggle.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                musicToggle.innerHTML = '<i class="fa-solid fa-play"></i> <span class="music-text">Play Music</span>';
-            } else {
-                bgMusic.play().catch(e => console.log("Audio play failed:", e));
-                musicToggle.innerHTML = '<i class="fa-solid fa-pause"></i> <span class="music-text">Pause Music</span>';
-            }
-            isMusicPlaying = !isMusicPlaying;
-        });
-    }
 
     // --- Mouse Sparkle Trail ---
     let lastSparkleTime = 0;
@@ -936,13 +919,13 @@ styleElement.textContent = notificationStyles;
 document.head.appendChild(styleElement);
 
 // --- Birthday Countdown Timer ---
-// Deborah's birthday: March 22
+// Deborah's birthday: April 9
 function updateCountdown() {
     const now = new Date();
-    let nextBirthday = new Date(now.getFullYear(), 2, 22); // March = month 2 (0-indexed)
+    let nextBirthday = new Date(now.getFullYear(), 3, 9); // April = month 3 (0-indexed)
     // If her birthday already passed this year, count to next year
     if (now >= nextBirthday) {
-        nextBirthday = new Date(now.getFullYear() + 1, 2, 22);
+        nextBirthday = new Date(now.getFullYear() + 1, 3, 9);
     }
 
     const diff = nextBirthday - now;
@@ -1075,41 +1058,7 @@ window.triggerHeartRain = function() {
     }
 };
 
-// ===== Floating Music Notes (spawns when music plays) =====
-const musicNoteWrap = document.getElementById('music-notes-wrap');
-const noteEmojis = ['🎵','🎶','🎼','♪','♫'];
-let musicNoteInterval = null;
 
-function spawnMusicNote() {
-    if (!musicNoteWrap) return;
-    const el = document.createElement('span');
-    el.className = 'music-note';
-    el.textContent = noteEmojis[Math.floor(Math.random() * noteEmojis.length)];
-    el.style.left = `${Math.random() * 95}%`;
-    const dur = Math.random() * 5 + 6;
-    el.style.animationDuration = `${dur}s`;
-    musicNoteWrap.appendChild(el);
-    setTimeout(() => el.remove(), dur * 1000 + 500);
-}
-
-// Hook into the existing music toggle
-const existingMusicToggle = document.getElementById('music-toggle');
-if (existingMusicToggle) {
-    existingMusicToggle.addEventListener('click', () => {
-        // Check if music is now playing (after toggle)
-        setTimeout(() => {
-            const bgMusic = document.getElementById('bg-music');
-            if (bgMusic && !bgMusic.paused) {
-                if (!musicNoteInterval) {
-                    musicNoteInterval = setInterval(spawnMusicNote, 2500);
-                }
-            } else {
-                clearInterval(musicNoteInterval);
-                musicNoteInterval = null;
-            }
-        }, 100);
-    });
-}
 
 // ===== Golden Sparkle Trail on Letter Card =====
 const letterCard = document.querySelector('.closing-letter');
